@@ -25,6 +25,7 @@ abstract final class FirestoreFields {
   static const String imageUrl = 'imageUrl';
 
   // Medicine Catalog
+  static const String medicineName = 'medicineName';
   static const String medicineId = 'medicineId';
   static const String genericName = 'genericName';
   static const String strength = 'strength';
@@ -53,8 +54,4 @@ abstract final class FirestoreFields {
   static const String userId = 'userId';
   static const String label = 'label';
   static const String isDefault = 'isDefault';
-
-  // Admin
-  static const String reviewedAt = 'reviewedAt';
-  static const String reviewedBy = 'reviewedBy';
 }
