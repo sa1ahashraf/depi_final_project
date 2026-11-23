@@ -1,7 +1,6 @@
 enum UserRole {
   customer,
-  pharmacy,
-  admin;
+  pharmacy;
 
   String get value => name;
 }
