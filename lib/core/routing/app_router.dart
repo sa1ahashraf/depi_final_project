@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:depi_final_project/core/widgets/splash/splash_screen.dart';
+import 'package:depi_final_project/features/customer/pharmacy_details/presentation/screens/pharmacy_details_screen.dart';
+import 'package:depi_final_project/features/customer/pharmacy_search/presentation/screens/pharmacy_search_screen.dart';
 
 class AppRouter {
   AppRouter._();
@@ -21,12 +23,35 @@ class AppRouter {
       _route(AppRoutes.login, 'login', 'تسجيل الدخول'),
       _route(AppRoutes.register, 'register', 'إنشاء حساب'),
       _route(AppRoutes.customerHome, 'customer-home', 'الرئيسية'),
-      _route(
-        AppRoutes.pharmacyDiscovery,
-        'pharmacy-discovery',
-        'اكتشاف الصيدليات',
+      GoRoute(
+        path: AppRoutes.pharmacyDiscovery,
+        name: 'pharmacy-discovery',
+        builder: (context, state) => const PharmacySearchScreen(),
       ),
-      _route(AppRoutes.medicineSearch, 'medicine-search', 'البحث عن دواء'),
+      GoRoute(
+        path: AppRoutes.pharmacyDetails,
+        name: 'pharmacy-details',
+        builder: (context, state) {
+          final pharmacyId =
+              state.pathParameters['pharmacyId'] ?? 'pharmacy_al_nour';
+          final query = state.uri.queryParameters['q'] ?? '';
+          return PharmacyDetailsScreen(
+            pharmacyId: pharmacyId,
+            initialSearchQuery: query,
+          );
+        },
+      ),
+      GoRoute(
+        path: '/pharmacy-details',
+        name: 'pharmacy-details-direct',
+        builder: (context, state) =>
+            const PharmacyDetailsScreen(pharmacyId: 'pharmacy_al_nour'),
+      ),
+      GoRoute(
+        path: AppRoutes.medicineSearch,
+        name: 'medicine-search',
+        builder: (context, state) => const PharmacySearchScreen(),
+      ),
       _route(AppRoutes.medicineDetails, 'medicine-details', 'تفاصيل الدواء'),
       _route(AppRoutes.cart, 'cart', 'السلة والدفع'),
       _route(AppRoutes.customerOrders, 'customer-orders', 'طلباتي'),
@@ -59,6 +84,7 @@ abstract final class AppRoutes {
   static const register = '/auth/register';
   static const customerHome = '/customer';
   static const pharmacyDiscovery = '/customer/pharmacies';
+  static const pharmacyDetails = '/customer/pharmacies/:pharmacyId';
   static const medicineSearch = '/customer/medicines';
   static const medicineDetails = '/customer/medicines/:medicineId';
   static const cart = '/customer/cart';
