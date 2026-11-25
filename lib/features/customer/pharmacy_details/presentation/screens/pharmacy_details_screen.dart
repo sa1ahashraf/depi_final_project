@@ -4,6 +4,7 @@ import 'package:depi_final_project/core/theme/app_colors.dart';
 import 'package:depi_final_project/core/widgets/feedback/app_feedback.dart';
 import 'package:depi_final_project/features/customer/cart/logic/cubits/customer_cart_cubit.dart';
 import 'package:depi_final_project/features/customer/cart/logic/cubits/customer_cart_state.dart';
+import 'package:depi_final_project/features/customer/cart/presentation/screens/customer_cart_screen.dart';
 import 'package:depi_final_project/features/customer/pharmacy_details/data/models/pharmacy_detail_model.dart';
 import 'package:depi_final_project/features/customer/pharmacy_details/data/repositories/firebase_pharmacy_details_repository.dart';
 import 'package:depi_final_project/features/customer/pharmacy_details/data/repositories/pharmacy_details_repository.dart';
@@ -338,18 +339,19 @@ class _PharmacyDetailsView extends StatelessWidget {
                 },
                 onCheckout: () {
                   Navigator.pop(sheetContext);
-                  AppFeedback.showSnackBar(
-                    context,
-                    'جاري الانتقال لإتمام الطلب بقيمة ${cartState.selectedTotal.toStringAsFixed(0)} ج.م',
-                    type: FeedbackType.success,
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (_) => const CustomerCartScreen(),
+                    ),
                   );
                 },
                 onCheckoutSelected: (selectedPharmacies, total) {
+                  cartCubit.setSelectedPharmacies(selectedPharmacies);
                   Navigator.pop(sheetContext);
-                  AppFeedback.showSnackBar(
-                    context,
-                    'تم اختيار ${selectedPharmacies.length} صيدليات لإتمام الطلب بقيمة ${total.toStringAsFixed(0)} ج.م',
-                    type: FeedbackType.success,
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (_) => const CustomerCartScreen(),
+                    ),
                   );
                 },
               );

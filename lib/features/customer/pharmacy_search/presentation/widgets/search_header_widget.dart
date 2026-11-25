@@ -3,11 +3,19 @@ import 'package:flutter/material.dart';
 class SearchHeaderWidget extends StatelessWidget {
   final VoidCallback? onBack;
   final VoidCallback? onChangeLocation;
+  final VoidCallback? onOpenCart;
+  final int cartItemCount;
+  final VoidCallback? onOpenOrders;
+  final int activeOrdersCount;
 
   const SearchHeaderWidget({
     super.key,
     this.onBack,
     this.onChangeLocation,
+    this.onOpenCart,
+    this.cartItemCount = 0,
+    this.onOpenOrders,
+    this.activeOrdersCount = 0,
   });
 
   @override
@@ -117,6 +125,40 @@ class SearchHeaderWidget extends StatelessWidget {
                   ],
                 ),
               ),
+              if (onOpenOrders != null)
+                IconButton(
+                  onPressed: onOpenOrders,
+                  tooltip: 'طلباتي',
+                  padding: const EdgeInsets.all(6),
+                  constraints: const BoxConstraints(),
+                  icon: Badge(
+                    isLabelVisible: activeOrdersCount > 0,
+                    label: Text('$activeOrdersCount'),
+                    child: const Icon(
+                      Icons.receipt_long_outlined,
+                      color: Color(0xFF005C53),
+                      size: 22,
+                    ),
+                  ),
+                ),
+              if (onOpenCart != null) ...[
+                const SizedBox(width: 4),
+                IconButton(
+                  onPressed: onOpenCart,
+                  tooltip: 'سلة المشتريات',
+                  padding: const EdgeInsets.all(6),
+                  constraints: const BoxConstraints(),
+                  icon: Badge(
+                    isLabelVisible: cartItemCount > 0,
+                    label: Text('$cartItemCount'),
+                    child: const Icon(
+                      Icons.shopping_cart_outlined,
+                      color: Color(0xFF005C53),
+                      size: 22,
+                    ),
+                  ),
+                ),
+              ],
             ],
           ),
         ],

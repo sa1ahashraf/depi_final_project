@@ -123,6 +123,13 @@ class CustomerCartCubit extends Cubit<CustomerCartState> {
     emit(state.copyWith(selectedPharmacyIds: allPharmacies));
   }
 
+  void setSelectedPharmacies(Set<String> pharmacyIds) {
+    final validIds =
+        state.items.values.map((e) => e.effectivePharmacyId).toSet();
+    final filtered = pharmacyIds.where(validIds.contains).toSet();
+    emit(state.copyWith(selectedPharmacyIds: filtered));
+  }
+
   void deselectAllPharmacies() {
     emit(state.copyWith(selectedPharmacyIds: {}));
   }

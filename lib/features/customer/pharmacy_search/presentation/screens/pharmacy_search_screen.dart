@@ -3,6 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:depi_final_project/core/widgets/feedback/app_feedback.dart';
 import 'package:depi_final_project/features/customer/cart/logic/cubits/customer_cart_cubit.dart';
 import 'package:depi_final_project/features/customer/cart/logic/cubits/customer_cart_state.dart';
+import 'package:depi_final_project/features/customer/cart/presentation/screens/customer_cart_screen.dart';
+import 'package:depi_final_project/features/customer/orders/logic/cubits/customer_orders_cubit.dart';
+import 'package:depi_final_project/features/customer/orders/presentation/screens/customer_orders_screen.dart';
 import 'package:depi_final_project/features/customer/pharmacy_details/data/repositories/pharmacy_details_repository.dart';
 import 'package:depi_final_project/features/customer/pharmacy_details/presentation/screens/pharmacy_details_screen.dart';
 import 'package:depi_final_project/features/customer/pharmacy_details/presentation/widgets/cart_bottom_sheet_widget.dart';
@@ -71,6 +74,13 @@ class _PharmacySearchView extends StatelessWidget {
       cartCubit = null;
     }
 
+    CustomerOrdersCubit? ordersCubit;
+    try {
+      ordersCubit = context.watch<CustomerOrdersCubit>();
+    } catch (_) {
+      ordersCubit = null;
+    }
+
     return Scaffold(
       backgroundColor: const Color(0xFFFAFCFC),
       body: SafeArea(
@@ -88,7 +98,7 @@ class _PharmacySearchView extends StatelessWidget {
           builder: (context, state) {
             return Column(
               children: [
-                // Top Header (Title, live coverage, location)
+                // Top Header (Title, live coverage, location, Cart & Orders shortcuts)
                 SearchHeaderWidget(
                   onBack: () => Navigator.of(context).maybePop(),
                   onChangeLocation: () {
@@ -98,6 +108,22 @@ class _PharmacySearchView extends StatelessWidget {
                       type: FeedbackType.information,
                     );
                   },
+                  cartItemCount: cartCubit?.state.totalItemCount ?? 0,
+                  onOpenCart: cartCubit != null
+                      ? () => Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (_) => const CustomerCartScreen(),
+                            ),
+                          )
+                      : null,
+                  activeOrdersCount: ordersCubit?.state.activeOrdersCount ?? 0,
+                  onOpenOrders: ordersCubit != null
+                      ? () => Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (_) => const CustomerOrdersScreen(),
+                            ),
+                          )
+                      : null,
                 ),
 
                 // Global Medicine Search Bar + Filter Icon with Badge
@@ -308,18 +334,19 @@ class _PharmacySearchView extends StatelessWidget {
               },
               onCheckout: () {
                 Navigator.pop(sheetContext);
-                AppFeedback.showSnackBar(
-                  context,
-                  'جاري الانتقال لإتمام الطلب بقيمة ${cartState.selectedTotal.toStringAsFixed(0)} ج.م',
-                  type: FeedbackType.success,
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (_) => const CustomerCartScreen(),
+                  ),
                 );
               },
               onCheckoutSelected: (selectedPharmacies, total) {
+                cartCubit.setSelectedPharmacies(selectedPharmacies);
                 Navigator.pop(sheetContext);
-                AppFeedback.showSnackBar(
-                  context,
-                  'تم اختيار ${selectedPharmacies.length} صيدليات لإتمام الطلب بقيمة ${total.toStringAsFixed(0)} ج.م',
-                  type: FeedbackType.success,
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (_) => const CustomerCartScreen(),
+                  ),
                 );
               },
             );

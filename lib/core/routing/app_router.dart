@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:depi_final_project/core/widgets/splash/splash_screen.dart';
+import 'package:depi_final_project/features/customer/cart/presentation/screens/customer_cart_screen.dart';
+import 'package:depi_final_project/features/customer/orders/presentation/screens/customer_orders_screen.dart';
+import 'package:depi_final_project/features/customer/orders/presentation/screens/order_tracking_screen.dart';
 import 'package:depi_final_project/features/customer/pharmacy_details/presentation/screens/pharmacy_details_screen.dart';
 import 'package:depi_final_project/features/customer/pharmacy_search/presentation/screens/pharmacy_search_screen.dart';
 
@@ -53,8 +56,24 @@ class AppRouter {
         builder: (context, state) => const PharmacySearchScreen(),
       ),
       _route(AppRoutes.medicineDetails, 'medicine-details', 'تفاصيل الدواء'),
-      _route(AppRoutes.cart, 'cart', 'السلة والدفع'),
-      _route(AppRoutes.customerOrders, 'customer-orders', 'طلباتي'),
+      GoRoute(
+        path: AppRoutes.cart,
+        name: 'cart',
+        builder: (context, state) => const CustomerCartScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.customerOrders,
+        name: 'customer-orders',
+        builder: (context, state) => const CustomerOrdersScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.orderTracking,
+        name: 'order-tracking',
+        builder: (context, state) {
+          final orderId = state.pathParameters['orderId'] ?? '';
+          return OrderTrackingScreen(orderId: orderId);
+        },
+      ),
       _route(AppRoutes.customerProfile, 'customer-profile', 'حسابي'),
       _route(AppRoutes.pharmacyHome, 'pharmacy-home', 'لوحة الصيدلية'),
       _route(AppRoutes.inventory, 'inventory', 'المخزون'),
@@ -89,6 +108,7 @@ abstract final class AppRoutes {
   static const medicineDetails = '/customer/medicines/:medicineId';
   static const cart = '/customer/cart';
   static const customerOrders = '/customer/orders';
+  static const orderTracking = '/customer/orders/:orderId';
   static const customerProfile = '/customer/profile';
   static const pharmacyHome = '/pharmacy';
   static const inventory = '/pharmacy/inventory';
